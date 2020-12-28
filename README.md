@@ -1,7 +1,7 @@
 Income Tracker App
 created with React Native
 
-Video Sources for the Financial Tracker App
+Video Sources for the Income Tracker App
 
 1. Clever Programmers: (Let's build an app with REACT NATIVE!)
    Link: https://www.youtube.com/watch?v=hggGvwA_tcc

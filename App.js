@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -8,7 +7,6 @@ import {
   TextInput,
   Button,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import moment from 'moment';
@@ -23,6 +21,13 @@ const App = () => {
     { date: moment().format('LL'), amount: 2000 },
     { date: moment().subtract(1, 'days').format('LL'), amount: 2500 },
     { date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(7, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(6, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(5, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(4, 'days').format('LL'), amount: 3500 },
+    { date: moment().subtract(3, 'days').format('LL'), amount: 3500 },
     { date: moment().subtract(2, 'days').format('LL'), amount: 4500 },
     { date: moment().subtract(2, 'days').format('LL'), amount: 5500 },
   ]);
@@ -65,6 +70,7 @@ const App = () => {
     {
       description: 'Freelance job with Qazi',
       amount: 499.99,
+      timestamp: new Date(),
     },
   ]);
 
@@ -79,9 +85,16 @@ const App = () => {
     Object.entries(groupedData).forEach((entry) => {
       // Entry[1] is an array of objects that holds all of the amounts (entry[0] holds the date).
       const total = entry[1].reduce((total, pair) => total + pair.amount, 0);
-      transformedArray.push({ date: entry[0], amount: total });
+      transformedArray.push({
+        date: moment(entry[0]).format('MM/DD'),
+        amount: total,
+      });
     });
-    return transformedArray;
+    const sortedArray = transformedArray.sort((a, b) =>
+      moment(a['date']).diff(moment(b['date']))
+    );
+
+    return sortedArray;
   };
 
   console.log('DEBUG-->', data);
@@ -108,6 +121,15 @@ const App = () => {
         amount: amount,
       },
     ]);
+
+    setData([
+      ...data,
+      {
+        date: moment().format('LL'),
+        amount: Number(amount),
+      },
+    ]);
+
     setDescription('');
     setAmount('');
   };
@@ -115,7 +137,7 @@ const App = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text style={styles.firstLabel}>Hello World! 💫</Text>
+        <Text style={styles.titleText}>Income Tracker! 💫</Text>
       </View>
 
       <View>
@@ -132,7 +154,6 @@ const App = () => {
           width={Dimensions.get('window').width} // from react-native
           height={220}
           yAxisLabel="$"
-          yAxisSuffix="k"
           yAxisInterval={1} // optional, defaults to 1
           chartConfig={{
             backgroundColor: '#e26a00',
@@ -170,8 +191,8 @@ const App = () => {
       <TextInput
         style={styles.input}
         value={amount}
-        keyboardType="numeric"
         placeholder="Enter the amount you made in USD ($)"
+        keyboardType="numeric"
         onChangeText={(text) => setAmount(text)}
       />
       <Button
@@ -194,12 +215,12 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 10,
     marginBottom: 20,
-    padding: 20,
+    paddingLeft: 5,
     height: 40,
     borderColor: 'red',
     borderWidth: 1,
   },
-  firstLabel: {
+  titleText: {
     backgroundColor: 'red',
     fontSize: 30,
     fontWeight: 'bold',
